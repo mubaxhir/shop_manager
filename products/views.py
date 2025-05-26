@@ -42,6 +42,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     search_fields = ['name', 'sku']
     filterset_fields = ['id','price', 'sku', 'name', 'inventory_quantity']
     ordering_fields = ['id','price', 'inventory_quantity', 'last_updated']
+    permission_classes = [IsAuthenticated, IsInProductManagersGroup]
 
 
 @api_view(['POST'])

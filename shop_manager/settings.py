@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'authentication',
     'products',
     'django_celery_results',
 ]
@@ -57,7 +58,10 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+    ],
 }
 
 ROOT_URLCONF = 'shop_manager.urls'
@@ -126,4 +130,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 USE_I18N = True
 
 USE_TZ = True
+
+AUTH_USER_MODEL = 'authentication.User'
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+# Celery beat schedule
+CELERY_BEAT_SCHEDULE = {
+    'update_inventory': {
+        'task': 'products.tasks.update_inventory',
+        'schedule': 60.0,  # every minute
+    },
+}
+
 

@@ -10,6 +10,6 @@ router.register(r'products', ProductViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('webhook/inventory-update/', shopify_webhook),
+    path('webhook/inventory-update/', shopify_webhook, name='shopify_webhook'),
     path('discount/<int:id>/', update_discount, name='update_discount'),
 ]

@@ -42,12 +42,11 @@ A simplified backend system built with **Python**, **Django**, and **Django REST
 ## Setup Instructions
 
 1. Clone repo & install Docker
-2. Copy `.env.example` to `.env` and configure
-3. Build and run:  
+2. Build and run:  
     ```sh
     docker-compose up --build
     ```
-4. Access API at `http://localhost:8000/api/`
+3. Access API at `http://localhost:8000/api/`
 
 ## Testing
 
@@ -63,6 +62,14 @@ docker-compose run web python manage.py test
 - Are class-based views and serializers used appropriately?
 - Is authentication enforced?
 - Are third-party packages used correctly?
+- Are Celery tasks defined and tested?
+- Are unit tests comprehensive and passing?
+- Are migrations applied and database schema normalized?
+- Is the code style consistent with PEP 8?
+- Are error handling and logging implemented?
+- redundant code removed?
+- code reuseable and modular?
+
 
 ## Onboarding Plan (For Juniors)
 
