@@ -1,6 +1,5 @@
 # Shop Manager Backend
-
-A simplified backend system built with **Python**, **Django**, and **Django REST Framework** for managing product data, integrating with Shopify webhooks, and performing nightly background tasks.
+A Django REST Framework application for managing products, integrating with Shopify, and handling inventory updates. This project is designed to be a comprehensive backend solution for a shop management system, featuring product management, authentication, and background tasks.
 
 ## Features
 
@@ -34,10 +33,51 @@ A simplified backend system built with **Python**, **Django**, and **Django REST
 - Bulk price update actions
 
 ## Nightly Background Tasks
+### 🕑 Nightly Inventory Update (via Celery Task Chain)
 
-1. **Import:** Load mock product data from CSV
-2. **Validate & Update:** Check data, update inventory
-3. **Report:** Generate and email inventory update summary
+This project includes a nightly task chain that performs the following steps:
+
+1. **Imports** product inventory data from a mock CSV file.
+2. **Validates and updates** existing products' inventory in the database.
+3. **Generates and sends** a summary email report of updated and skipped entries.
+
+#### 🔁 Celery Task Chain
+
+The task chain is defined in `products/tasks.py` and includes:
+
+```python
+import_csv_data.s('/app/data/mock_inventory.csv') |
+validate_and_update_inventory.s() |
+send_report_email.s()
+```
+
+---
+
+### 🛠 Running Nightly Task Chain via Cron
+
+To run this chain automatically at **2:00 AM every day**, add the following cron job to your host system:
+
+```bash
+0 2 * * * docker-compose exec web python manage.py shell -c "from products.tasks import import_csv_data, validate_and_update_inventory, send_report_email; from celery import chain; chain(import_csv_data.s('/app/data/mock_inventory.csv') | validate_and_update_inventory.s() | send_report_email.s()).apply_async()"
+```
+
+> 📝 Make sure the CSV file exists at `/app/data/mock_inventory.csv` inside the Docker container, and that the Celery worker is running.
+
+---
+
+### 📧 Email Configuration
+
+Update your `settings.py` with SMTP credentials to enable email delivery:
+
+```python
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@example.com'
+EMAIL_HOST_PASSWORD = 'your-app-password'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+```
 
 ## Setup Instructions
 
@@ -62,7 +102,7 @@ docker-compose run web python manage.py test
 - Are class-based views and serializers used appropriately?
 - Is authentication enforced?
 - Are third-party packages used correctly?
-- Are Celery tasks defined and tested?
+- Are Celery tasks, chain trigger tested?
 - Are unit tests comprehensive and passing?
 - Are migrations applied and database schema normalized?
 - Is the code style consistent with PEP 8?
