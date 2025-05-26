@@ -11,18 +11,22 @@ def import_csv():
         data = list(reader)
         return data
 
+
 @shared_task
 def validate_and_update(data):
+    from django.db import transaction
     updated = []
-    for row in data:
-        try:
-            product = Product.objects.get(sku=row['sku'])
-            product.inventory_quantity = int(row['inventory_quantity'])
-            product.save()
-            updated.append(product.sku)
-        except Product.DoesNotExist:
-            continue
+    with transaction.atomic():
+        for row in data:
+            try:
+                product = Product.objects.get(sku=row['sku'])
+                product.inventory_quantity = int(row['inventory_quantity'])
+                product.save()
+                updated.append(product.sku)
+            except Product.DoesNotExist:
+                continue
     return updated
+
 
 @shared_task
 def email_report(skus):
