@@ -21,7 +21,7 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - db
+      - web
       - redis
 
   celery-beat:
@@ -30,6 +30,6 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - db
+      - web
       - redis
 
