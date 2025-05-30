@@ -65,6 +65,9 @@ def send_report_email(summary):
         message += "\nSkipped rows:\n"
         for item in skipped:
             message += f"  {item}\n"
+            
+    print("Sending report email...")
+    print(message)
 
     # Replace with your actual email settings
     send_mail(

@@ -1,5 +1,4 @@
 # docker-compose.yml
-version: '3'
 services:
   web:
     build: .
@@ -7,5 +6,30 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis
   redis:
-    image: redis
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    command: celery -A shop_manager worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+
+  celery-beat:
+    build: .
+    command: celery -A shop_manager beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+
