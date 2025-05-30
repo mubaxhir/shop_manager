@@ -1,5 +1,7 @@
 # products/views.py
 from rest_framework import viewsets, filters
+
+from authentication.permissions import IsManagerUser
 from .models import Product
 from .serializers import ProductSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -42,7 +44,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     search_fields = ['name', 'sku']
     filterset_fields = ['id','price', 'sku', 'name', 'inventory_quantity']
     ordering_fields = ['id','price', 'inventory_quantity', 'last_updated']
-    permission_classes = [IsAuthenticated, IsInProductManagersGroup]
+    permission_classes = [IsAuthenticated, IsManagerUser]
 
 
 @api_view(['POST'])

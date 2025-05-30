@@ -56,11 +56,11 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ],
 }
 
@@ -147,8 +147,6 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': 60.0,  # every minute
     },
 }
-
-
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

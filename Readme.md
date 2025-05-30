@@ -46,7 +46,7 @@ This project includes a nightly task chain that performs the following steps:
 The task chain is defined in `products/tasks.py` and includes:
 
 ```python
-import_csv_data.s('/app/data/mock_inventory.csv') |
+import_csv_data.s('test.csv') |
 validate_and_update_inventory.s() |
 send_report_email.s()
 ```
@@ -58,10 +58,10 @@ send_report_email.s()
 To run this chain automatically at **2:00 AM every day**, add the following cron job to your host system:
 
 ```bash
-0 2 * * * docker-compose exec web python manage.py shell -c "from products.tasks import import_csv_data, validate_and_update_inventory, send_report_email; from celery import chain; chain(import_csv_data.s('/app/data/mock_inventory.csv') | validate_and_update_inventory.s() | send_report_email.s()).apply_async()"
+0 2 * * * docker-compose exec web python manage.py shell -c "from products.tasks import import_csv_data, validate_and_update_inventory, send_report_email; from celery import chain; chain(import_csv_data.s('test.csv') | validate_and_update_inventory.s() | send_report_email.s()).apply_async()"
 ```
 
-> 📝 Make sure the CSV file exists at `/app/data/mock_inventory.csv` inside the Docker container, and that the Celery worker is running.
+> 📝 Make sure the CSV file exists at `test.csv` inside the Docker container, and that the Celery worker is running.
 
 ---
 
